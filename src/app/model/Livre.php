@@ -1,12 +1,13 @@
 <?php
-include '../../config/db.php';
+namespace src\app\model;
 
-
+use PDO;
+use src\config\Connection;
 
 class Livre{
     private $id;
     private $titre;
-    private $auteur;
+    private $auteur_name;
     private $tag=[];
     private $categorie;
     private $status;
@@ -25,8 +26,8 @@ class Livre{
         return $this->titre;
     }
 
-    public function getAuteur(){
-        return $this->auteur;
+    public function getAuteur_name(){
+        return $this->auteur_name;
     }
 
     public function getTag(){
@@ -53,8 +54,8 @@ class Livre{
     }
 
 
-    public function setAuteur($auteur){
-      $this->auteur=$auteur;
+    public function setAuteur_name($auteur_name){
+      $this->auteur_name=$auteur_name;
 
     }
     
@@ -116,9 +117,9 @@ public function AjouterLivre($titre,$auteur,$tags,Categorie $categorie){
 
 
 $stmt=$this->db->prepare('insert into Livres (titre,auteur,categorie_id) values (:titre,:auteur,:categorie)');
-$stmt->bindParam(':titre',$titre);
+$stmt->bindParam(':titre',$this->titre);
 $stmt->bindParam(':auteur',$auteur);
-$stmt->bindParam(':categorie',$categorie->getId());
+$stmt->bindParam(':categorie',$this->categorie->getId());
 
   if($stmt->execute()){
     foreach($tags AS $tag){
@@ -133,13 +134,30 @@ $stmt->bindParam(':categorie',$categorie->getId());
   }
 
 }
-
-
-
-
-
-
-
 }
+
+
+// $categorie = Categorie::getCategorieByName("cat1");
+
+// $categorie = new Categroei();
+
+// $categorie->getByName("cat1");
+
+// => {
+//     $this->title = $data['title'];
+//     $this->auteur = $data["auteur"];
+// }
+
+
+// var_dump($categorie);
+
+
+
+// $livre = new Livre("ti1", "Nom Auteur", ['T1', 'T2'], $categorie);
+
+
+// $livre->create();
+
+
 
 ?>

@@ -1,4 +1,8 @@
 <?php
+namespace src\app\model;
+require_once 'C:\wamp64\www\BiblioSchool\vendor\autoload.php';
+use PDO;
+use src\config\Connection;
 
 class Tag
 {
@@ -9,8 +13,9 @@ private $livre=[];
 private $db;
 
 
-public function __construct()
+public function __construct($tag_name)
 {
+    $this->tag_name=$tag_name;
 
     $this->db=(new Connection())->connect();
 
@@ -20,7 +25,7 @@ public function getId(){
     return $this->id;
 }
 
-public function getTag_name(){
+public function getTagname(){
 
     return $this->tag_name;
 }
@@ -36,19 +41,18 @@ public function setId($id){
 
 }
 
-public function setTag_name($tag_name){
+public function setTagname($tag_name){
     $this->tag_name=$tag_name;
 }
 
 
-public function gettagbyTag_name($tag_name){
+public function getTagByTagName($tag_name){
 
 $query='select * from Tags where tag_name=:tag_name';
 $stmt=$this->db->prepare($query);
 $stmt->bindParam(':tag_name',$tag_name);
  if ($stmt->execute()){
     $id=$stmt->fetchColumn();
-    var_dump($id);
     return $id;
  }
 else {
@@ -57,43 +61,42 @@ else {
 
 }
 
+public function __toString()
+{
+    return 'the tag is : ' .$this->getTagname();
+}
 
-public function CreerTag($tag_name){
-if($this->gettagbyTag_name($tag_name)){
-        return $this->gettagbyTag_name($tag_name);
+public function createTag(){
+    $tag_name=$this->getTagname();
+if($this->getTagByTagName($tag_name)){
+        return $this->getTagByTagName($tag_name);
     }
 else{
     $query='insert into Tags (tag_name) values (:tag_name)';
     $stmt=$this->db->prepare($query);
-    $stmt->bindParam(':tag_name',$tag_name);
-
+    $stmt->bindParam(':tag_name',$this->tag_name);
     $stmt->execute();
-    $last_id=$this->db->query('select MAX(id) from TAgs')->fetchColumn();
-    return $last_id;
+     $last_id=$this->db->query('select MAX(id) from TAgs')->fetchColumn();
+    return    $last_id;
 }
 
 }
 
-public function supprimerTag($id){
+public function deleteTag(){
+    $query='delete from Tags where id= :id';
+    $stmt=$this->db->prepare($query);
+    $stmt->bindParam(':id',$this->id);
+    return $stmt->execute();
 
-$query='delete from Tags where id=: id';
-$stmt=$this->db->prepare($query);
-$stmt->bindParam(':id',$id);
-return $stmt->execute();
-
-
-}
-public function AddLivreTag(Livre $livre){
-
-    $this->livre[]=$livre;
 
 }
 
-public function ModifierTag($id,$tag_name){
+
+public function updateTag(){
     $query='update Tags set tag_name =:tag_name where id=:id';
     $stmt=$this->db->prepare($query);
-    $stmt->bindParam(':id',$id);
-    $stmt->bindParam(':tag_name',$tag_name);
+    $stmt->bindParam(':id',$this->id);
+    $stmt->bindParam(':tag_name',$this->tag_name);
     return $stmt->execute();
 }
 
@@ -106,8 +109,14 @@ public function getAlltag(){
 
 }
 
+public function AddLivreTag(Livre $livre){
+
+    $this->livre[]=$livre;
 
 }
+
+}
+
 
 
 
