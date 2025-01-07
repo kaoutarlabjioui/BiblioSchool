@@ -1,0 +1,15 @@
+{
+    "name": "youcode/biblio-school",
+    "autoload": {
+        "psr-4": {
+            "src\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "kaoutarlabjioui",
+            "email": "kalabjioui@gmail.com"
+        }
+    ],
+    "require": {}
+}
